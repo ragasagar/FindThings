@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Components/history_cards/history.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Components/history_cards/history.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState } from "react"
+import { Button } from "react-bootstrap";
+import { put } from "../../Services/Apicall";
+import "./history.style.css"
+import { useHistory } from 'react-router-dom';
+import DateTimePicker from "react-datetime-picker/dist/DateTimePicker";
+
+ /**
+  *  @component History
+  *  To show the order history for both buyer and the seller.
+  * If user is seller then they will be able to reject or accept the orders
+  * If the user is buyer then they will be able to see the details of the order and location of the shop.
+  *  
+  */
+export function History({ order, key, type, acceptOrder, rejectOrder, status, shops }) {
+    
+    const [clazzName, setclazzName] = useState("ShowDetails")
+    const [d, setD] = useState(order.status)
+    let user = JSON.parse(localStorage.getItem('user-info'))
+    let history = useHistory();
+
+    let user_loc = JSON.parse(localStorage.getItem("user-loc"));
+
+    useEffect(() => {
+
+    })
+
+
+    function showDetail() {
+        //To hide and unhide the details of the order
+        console.log(order.items);
+        if (clazzName === "ShowDetails") {
+            setclazzName("HideDetails")
+        } else {
+            setclazzName("ShowDetails")
+        }
+        console.log(clazzName);
+    }
+
+    function completeOrder() {
+        //To set the order status and put the order request into the dtabase if the order is completed
+        let orderRequest = order;
+        orderRequest.status = "COMPLETED";
+        put("http://localhost:8090/orders", orderRequest)
+            .then((resp) => {
+                resp.json().then((resp) => {
+                    alert("Update successfully");
+                    order.status = orderRequest.status;
+                    setD(orderRequest.status)
+                })
+
+            }).catch(err => alert(err));
+
+    }
+
+    let url = ""
+    if (type == "USER" &amp;&amp; shops.length > 0) {
+        if (user.role == "USER") {
+            console.log(shops);
+            let address = shops.filter(shop => shop.shopId === order.shopId)[0].address
+            address = address.split(" ").join("+").split(",").join("")
+
+            // console.log(address);
+            //To show the destination of the shops to the  buyer if they click on the location button
+            if (user_loc) {
+                url = "https://www.google.com/maps/dir/?api=1&amp;origin=" + user_loc.lat + "," + user_loc.long + "&amp;destination=" + address;
+            }
+        }
+    }
+
+    return (
+        &lt;div className="history-container container">
+            &lt;div className="row">
+                &lt;div className="col col-lg-4">
+                    &lt;h3>ShopId:OrderId&lt;/h3>
+                &lt;/div>
+                &lt;div className="col col-lg-4">
+                    &lt;p>Total Price&lt;/p>
+                &lt;/div>
+                &lt;div className="col col-lg-4">&lt;/div>
+            &lt;/div>
+            &lt;div className="row">
+                &lt;div className="col col-lg-4">
+                    &lt;h2>{order.shopId}:{order.orderId}&lt;/h2>
+                &lt;/div>
+                &lt;div className="col col-lg-4">
+                    &lt;p>{order.totalPrice}&lt;/p>
+                    &lt;p>
+                        &lt;DateTimePicker
+                            value={new Date(order.time)}
+                            format="yyyy-MM-dd h:mm:ss"
+                            required="true"
+                            disabled={false}
+                        />&lt;/p>
+                &lt;/div>
+                &lt;div className="col col-lg-4">
+                    {(type == "USER") ?
+                        &lt;div>
+                            &lt;h3>&lt;p>{order.status}&lt;/p>&lt;/h3>
+
+                            &lt;div>&lt;a href="/feedback">Feedback&lt;/a>&lt;/div>
+                            &lt;div>&lt;a href={url}
+                                target="_blank">location&lt;/a>&lt;/div>
+                        &lt;/div>
+                        :
+                        &lt;div className="col col-lg-4">
+                            &lt;h3>&lt;p>{order.status}&lt;/p>&lt;/h3>
+                            {
+                                status != "COMPLETE" ?
+                                    &lt;>
+                                        &lt;Button className="button" variant="outline-primary" onClick={acceptOrder} id={order.orderId} >Accept Order&lt;/Button>
+                                        &lt;Button className="button" variant="outline-danger" onClick={rejectOrder} id={order.orderId} >Reject Order&lt;/Button>
+                                    &lt;/>
+                                    :
+                                    d != "COMPLETED" &amp;&amp; d != "REJECTED" ?
+                                        &lt;Button className="button" variant="outline-success" onClick={completeOrder}>Complete Order&lt;/Button>
+                                        :
+                                        ""
+                            }
+                        &lt;/div>
+                    }
+                &lt;/div>
+
+            &lt;/div>
+            &lt;div className="App">
+                &lt;a onClick={showDetail} className="btn btn-link">{clazzName}&lt;/a>
+                &lt;div id="secondhistorydiv" className={clazzName}>
+                    {
+                        order.items.map(data =>
+
+                            &lt;div>
+                                &lt;div className="row">
+                                    &lt;div className="col col-lg-4">
+                                        &lt;p>{data.name}&lt;/p>
+                                    &lt;/div>
+                                    &lt;div className="col col-lg-4">
+                                        &lt;p>{data.price}&lt;/p>
+                                    &lt;/div>
+                                    &lt;div className="col col-lg-4">
+                                        &lt;p>{data.size}&lt;/p>
+                                    &lt;/div>
+                                &lt;/div>
+                            &lt;/div>
+                        )
+                    }
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    );
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="About.html">About</a></li><li><a href="Buyer.html">Buyer</a></li><li><a href="Card.html">Card</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Header.html">Header</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="Seller.html">Seller</a></li><li><a href="SellerOrder.html">SellerOrder</a></li><li><a href="ShowFeedbacks.html">ShowFeedbacks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#ProductUpdate">ProductUpdate</a></li><li><a href="global.html#removeUserSession">removeUserSession</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setUserSession">setUserSession</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 29 2021 20:56:25 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Components/Login.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Components/Login.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { get } from '../Services/Apicall';
+
+/**     
+ *      @component Login:
+    *   Buyer and seller will have same login page.
+    *   Based on their login information they will be directed to their respective dashboards
+    */
+export default function Login() {
+    
+    const [username, setUsername] = useState("");//To set username value
+    const [pass, setPass] = useState("");//To set password value
+
+    let history = useHistory();
+
+
+    /** submit function:
+    *  When login form is submit this function will be invoked
+    *  This will fetch the information of the user and push the user on their respective dashboard 
+    *  according to their role
+    */
+    async function submit(e) {//When login form is submited this function will be invoked
+        e.preventDefault();
+        if (!username || !pass) {
+            alert("Email or Password cannot be blank");
+        }
+        else {
+            //Dummy data...need to check from the database
+            let result;
+            localStorage.setItem('token', btoa(username + ":" + pass))
+            get("http://localhost:8090/users/auth/login")
+                .then(result => result.json())
+                .then(response => {
+                    localStorage.setItem("user-info", JSON.stringify(response))
+                    result = response;
+                    if (result &amp;&amp; result['role'] === 'USER')
+                        history.push('/buyer')
+                    else if (result &amp;&amp; result['role'] === 'SELLER')
+                        history.push('/seller')
+                }).catch(err => {
+                    alert(err);
+                });
+            //Sending logger to their respective dashboard with repect to the user values
+
+        }
+    }
+    return (
+        &lt;center>
+            &lt;div className="container rounded-xl z-10 md:w-4/5 shadow-lg mt-16 lg:w-9/12" style={{ backgroundColor: "#F5F5F5" }}>
+                &lt;h2 className="text-green-600 font-semibold text-xl my-2">Login to continue&lt;/h2>
+                &lt;form>{/*Login form */}
+                    &lt;div className="mb-3 ">
+                        &lt;label htmlFor="username" className="form-label">Username&lt;/label>
+                        &lt;input type="text" value={username} onChange={(e) => setUsername(e.target.value)} className="form-control focus:bg-blue-50" id="username" aria-describedby="emailHelp" />
+
+                    &lt;/div>
+                    &lt;div className="mb-3">
+                        &lt;label htmlFor="pass" className="form-label">Password&lt;/label>
+                        &lt;input type="password" value={pass} onChange={(e) => setPass(e.target.value)} className="form-control focus:bg-blue-50" id="pass" />
+                    &lt;/div>&lt;br />
+                    &lt;button className="btn btn-sm btn-success text-lg hover:text-green-600 hover:bg-white" style={{ height: "35px", width: "80px" }} onClick={submit}>Login&lt;/button>
+                &lt;/form>
+                &lt;br />
+                &lt;h5 className="my-3">Don't have an account?&lt;/h5>{/*In case user doesn't have an account and want to sign up */}
+                &lt;a href="/signupbuyer"className="text-lg hover:text-red-600">SignUp for buyer&lt;/a> &amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a href="/signupseller"className="text-lg hover:text-red-600">SignUp for seller&lt;/a>
+                &lt;br />&lt;br />
+            &lt;/div>
+        &lt;/center>
+    )
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="About.html">About</a></li><li><a href="Buyer.html">Buyer</a></li><li><a href="Card.html">Card</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Header.html">Header</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="Seller.html">Seller</a></li><li><a href="SellerOrder.html">SellerOrder</a></li><li><a href="ShowFeedbacks.html">ShowFeedbacks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#ProductUpdate">ProductUpdate</a></li><li><a href="global.html#removeUserSession">removeUserSession</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setUserSession">setUserSession</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 29 2021 20:56:25 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

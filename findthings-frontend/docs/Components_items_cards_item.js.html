@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Components/items_cards/item.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Components/items_cards/item.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
+import { Button } from "react-bootstrap";
+import Modal from 'react-bootstrap/Modal';
+import DateTimePicker from 'react-datetime-picker';
+import { useHistory } from 'react-router-dom';
+import { post } from "../../Services/Apicall";
+import ShowFeedbacks from '../ShowFeedbacks';
+import "./item.style.css";
+
+
+  /**
+   * @component Item
+  *  Main functionality of the buyer page. Will take the input and process it as required.
+  *  
+  */
+export default function Item({ item, key }) {
+  
+    const [clazzName, setclazzName] = useState("ShowDetails")
+    let user = JSON.parse(localStorage.getItem('user-info'))
+    const [d, setD] = useState({});
+    const [show, setShow] = useState(false);
+    const [datetime, setDatetime] = useState(new Date());
+    const [totalPrice, setTotalPrice] = useState(item.totalPrice);
+    const [qty, setQty] = useState({});
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [clazzFeedback, setclazzFeedback] = useState("ShowFeedbacks")
+    let history = useHistory();
+
+
+/**
+  *   This function will be invoked when the buyer clicks on the order button.
+  *  @returns will post the user's order request to the database
+  */
+    function order() {
+       
+        //console.log(item.items)
+        if (totalPrice == 0) {
+            alert("Select item");
+        } else {
+            let itemList = []
+            item.items.forEach(element => {
+                let itemRequest = {
+                    name: element.name,
+                    price: element.price,
+                    cost: element.price,
+                    size: qty[element.name] ? qty[element.name] : 1
+                }
+                itemList.push(itemRequest)
+            })
+            console.log(qty);
+
+            let request = {
+                items: itemList,
+                buyerId: user.id,
+                shopId: item.shopId,
+                time: datetime.toISOString(),
+                totalPrice: totalPrice,
+                status: "ORDERED"
+            }
+
+            console.log(request);//Posting the request to the database
+            post('http://localhost:8090/orders', request)
+                //.then(resp => resp.json)
+                .then((resp) => {
+                    resp.json().then((resp) => {
+                        setD(resp);
+                        setShow(false);
+                        alert("Ordered Successfully");
+                        history.push("/orders");
+                    })
+                        .catch(error => alert(error))
+                });
+        }
+    }
+
+    /**
+  *   This function will be invoked when the buyer clicks on the showDetails button.
+  *   This will Hide and unhide the showdetail component
+  */
+    function showDetail() {
+        //Hide and unhide the showdetail component
+        console.log(item.items);
+        if (clazzName === "ShowDetails") {
+            setclazzName("HideDetails")
+        } else {
+            setclazzName("ShowDetails")
+        }
+        console.log(clazzName);
+    }
+
+     /**
+  *   This function will be invoked when the buyer clicks on the showFeedbacks button.
+  *   This will Hide and unhide the showfeedback component
+  */
+    function showFeedback() {
+        //Hide and unhide the feedbacks of the shops
+        if (clazzFeedback === "ShowFeedbacks") {
+            setclazzFeedback("HideFeedbacks")
+        } else {
+            setclazzFeedback("ShowFeedbacks")
+        }
+        console.log(clazzFeedback);
+    }
+
+     /**
+  *   This function will be invoked when the buyer changes the quantity of the product.
+  *   This will set the quantity of the products entered by the buyer
+  */
+    function setQuantities(e) {
+        //To set the quantity of the products entered by the buyer
+        let temp = qty;
+        temp[e.target.id] = e.target.value
+        setQty(temp)
+        let total = 0;
+        item.items.forEach(i => {
+            if (qty[i.name]) {
+                total = total + i.price * qty[i.name];
+            } else {
+                total = total + i.price * 1;
+            }
+        })
+        setTotalPrice(total);
+    }
+
+
+    return (
+        &lt;div className="item-container container">
+            &lt;div className="row">
+                &lt;div className="col col-lg-4">
+                    &lt;h2>ShopId&lt;/h2>
+                &lt;/div>
+                &lt;div className="col col-lg-4">
+                    &lt;p>Total Price&lt;/p>
+                &lt;/div>
+            &lt;/div>
+            &lt;div className="row">
+                &lt;div className="col col-lg-4 col-sm-4">
+                    &lt;h2>{item.shopId}&lt;/h2>
+                &lt;/div>
+                &lt;div className="col col-lg-4 col-sm-4">
+                    {totalPrice ? &lt;p>{totalPrice}&lt;/p> : &lt;p>{item.price}&lt;/p>}
+                &lt;/div>
+                &lt;div className="col col-lg-4 col-sm-4">
+                    &lt;Button className="button" variant="outline-success" onClick={() => setShow(true)}>Order&lt;/Button>&lt;br />
+                    &lt;a onClick={showFeedback} className="btn btn-link" left>{clazzFeedback}&lt;/a>
+                    &lt;div id="feedbackdiv" className={clazzFeedback}>
+                        &lt;ShowFeedbacks id={item.shopId} />
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+            &lt;div className="App">
+                &lt;a onClick={showDetail} className="btn btn-link" left>{clazzName}&lt;/a>
+                &lt;div id="seconddiv" className={clazzName}>
+                    {
+                        item.items.map(data =>
+
+                            &lt;div>
+                                &lt;div className="row">
+                                    &lt;div className="col col-lg-4">
+                                        &lt;p>{data.name}&lt;/p>
+                                    &lt;/div>
+                                    &lt;div className="col col-lg-3">
+                                        &lt;p>{data.price}&lt;/p>
+                                    &lt;/div>
+                                    &lt;div className="col col-lg-5">
+                                        &lt;label >Qty
+                                            &lt;input type="number" className="form-control" value={qty[data.name]} placeholder={1} onChange={setQuantities} id={data.name} min={0}>&lt;/input>
+                                        &lt;/label>
+                                    &lt;/div>
+                                &lt;/div>
+                            &lt;/div>
+                        )
+                    }
+                &lt;/div>
+            &lt;/div>
+            &lt;div>
+                {/* To show the the DateTimePicker component when buyer decides to order items */}
+                &lt;Modal
+                    show={show}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                >
+                    &lt;Modal.Header closeButton>
+                        &lt;Modal.Title>Order Confirmation&lt;/Modal.Title>
+                    &lt;/Modal.Header>
+                    &lt;Modal.Body>
+                        &lt;p>Select Date and time for your pickup.&lt;/p>
+                        &lt;br />
+                        &lt;DateTimePicker
+                            onChange={setDatetime}
+                            value={datetime}
+                            format="yyyy-MM-dd h:mm:ss a"
+                            required="true"
+                        />
+                    &lt;/Modal.Body>
+                    &lt;Modal.Footer>
+                        &lt;Button variant="secondary" onClick={handleClose}>
+                            Cancel
+                        &lt;/Button>
+                        &lt;Button onClick={order} variant="success">Order&lt;/Button>
+                    &lt;/Modal.Footer>
+                &lt;/Modal>
+            &lt;/div>
+        &lt;/div>
+    );
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="About.html">About</a></li><li><a href="Buyer.html">Buyer</a></li><li><a href="Card.html">Card</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Header.html">Header</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="Seller.html">Seller</a></li><li><a href="SellerOrder.html">SellerOrder</a></li><li><a href="ShowFeedbacks.html">ShowFeedbacks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#ProductUpdate">ProductUpdate</a></li><li><a href="global.html#removeUserSession">removeUserSession</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setUserSession">setUserSession</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 29 2021 20:56:25 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

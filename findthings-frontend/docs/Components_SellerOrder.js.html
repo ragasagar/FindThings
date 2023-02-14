@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Components/SellerOrder.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Components/SellerOrder.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from 'react'
+import { get, put } from '../Services/Apicall';
+import { HistoryList } from './history_cards/history-list'
+import "./Header.css";
+
+require("es6-promise").polyfill();
+require("isomorphic-fetch");
+
+class SellerOrder extends Component {
+    /**
+     *   This component will show the New orders arrived of the seller
+     *   It will fetch all the relevant data(i.e., Orders).
+     *   Contains all the main functions required for the seller Notification page
+     */
+
+    constructor() {
+        super();
+        this.state = {
+            data: [],
+            user: JSON.parse(localStorage.getItem('user-info'))
+        }
+
+    }
+
+
+    /**  componentDidMount():
+     *   If user is buyer then they will be redirected to the buyer page.
+     *   If User is seller then it will fetch all the active ordes for the respective shop id.
+     */
+    componentDidMount() {
+    
+        if(!this.state.user)
+        {
+            this.props.history.push("/home")
+        }
+        else if (this.state.user.role === "USER") {
+            this.props.history.push("/buyers");
+        }
+        else{
+            get('http://localhost:8090/orders/shops/' + this.state.user.shop.shopId)
+            .then((resp) => resp.json())
+            .then((json) => {
+                console.log("Hello")
+                this.setState ({
+                    data : json
+                })
+            });
+        }
+    }
+
+     /** acceptOrder function:
+     *   This function will be invoked when seller clicks on the accept order button.
+     *   And it will call another function uodateOrder to update the set of the data.
+     */
+    acceptOrder = (e) => {
+   
+        let orderRequest = this.state.data.filter(order => order.orderId == e.target.id)[0];
+        orderRequest.status = "ACCEPTED";
+        this.updateOrder(orderRequest);
+    }
+
+    /**  rejectOrder function:
+     *   This function will be invoked when seller clicks on the reject order button.
+     *   And it will call another function uodateOrder to update the set of the data.
+     */
+    rejectOrder = (e) => {
+    
+        let orderRequest = this.state.data.filter(order => order.orderId == e.target.id)[0];
+        orderRequest.status = "REJECTED";
+        console.log(this.state.data.indexOf(orderRequest));
+        this.updateOrder(orderRequest);
+    }
+
+    /**  updateOrder function:
+     *   This function will be invoked either when seller clicks on the accept order button or reject order button.
+     *   And it will set the state of the data.
+     */
+    updateOrder (request) {
+    
+        console.log(request);
+        put("http://localhost:8090/orders", request)
+            .then((resp) => {
+                resp.json().then((resp) => {
+                    let temp = this.state.data;                    
+                    temp.splice(temp.indexOf(request), 1);
+                    this.setState ({
+                        data:temp
+                    })
+                })
+
+            }).catch(err => alert(err));
+
+    }
+
+    /**  render fucntion:
+     *   This will render the basic layout.
+     *   Will show the orders in form cards with accept and reject order buttons
+     */
+    render() {
+     
+        let items = this.state.data;
+        return (
+            &lt;div className="container">
+                &lt;br />
+                &lt;center>
+                    &lt;h2>Orders&lt;/h2>
+
+                    {this.state.data.length > 0 ?
+                        &lt;HistoryList orders={this.state.data} type="SELLER" acceptOrder={this.acceptOrder} rejectOrder={this.rejectOrder} /> :
+                        &lt;div className="my-5 col-sm-4 history-container" >&lt;h3 style={{color:"red"}}>No New Orders&lt;/h3>&lt;/div>
+                    }
+                &lt;/center>
+
+            &lt;/div>
+
+        )
+    }
+}
+export default SellerOrder</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="About.html">About</a></li><li><a href="Buyer.html">Buyer</a></li><li><a href="Card.html">Card</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Header.html">Header</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="Seller.html">Seller</a></li><li><a href="SellerOrder.html">SellerOrder</a></li><li><a href="ShowFeedbacks.html">ShowFeedbacks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#ProductUpdate">ProductUpdate</a></li><li><a href="global.html#removeUserSession">removeUserSession</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setUserSession">setUserSession</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 29 2021 20:56:25 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

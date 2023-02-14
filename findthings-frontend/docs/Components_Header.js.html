@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Components/Header.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Components/Header.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from 'react'
+import { Button } from 'react-bootstrap'
+import { get } from '../Services/Apicall';
+import { NavLink } from 'react-router-dom'
+import { withRouter } from "react-router-dom";
+
+class Header extends Component {
+  /**
+  *   Customised and responsive header will be displayed for the buyer and the seller.
+  *   There will be no Notification icon if the user is buyer.
+  *   Notification icon will be showed if the user is seller.
+  */
+
+  constructor(props) {
+    super();
+    this.timer = null;
+    this.state = {
+      user: null,
+      orderItems: [],
+      orderCount: 0,
+      navItemState: false,
+    }
+  }
+
+  navItemsHandler = () => {
+    this.setState({
+      navItemState: !this.state.navItemState
+    })
+
+    console.log(this.state.navItemState);
+
+  };
+
+
+  /** componentDidMount function:
+  *   Will set the state of the user and get the user information from the local storage.
+  *   If user is logged in as the seller it will set the timer to 2000ms
+  */
+  componentDidMount() {
+  
+    this.setState({
+      user: JSON.parse(localStorage.getItem('user-info'))
+    })
+    let logged = JSON.parse(localStorage.getItem('user-info'));
+
+    if (logged &amp;&amp; logged.role === "SELLER") {
+      this.timer = setInterval(() => this.getItems(), 2000);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.timer) {
+      this.timer = null;
+    } // here...
+  }
+
+
+  /**   getItems function:
+    *   This function will fetch the order specific to the shop id and set the states.
+    */
+  getItems() {
+    
+    if (this.state.user &amp;&amp; this.state.user.shop) {
+      get("http://localhost:8090/orders/shops/" + this.state.user.shop.shopId)
+        .then(result => result.json())
+        .then(result => this.setState({
+          orderItems: result,
+          orderCount: result.length
+        }));
+    }
+  }
+
+   
+  /**   onLogout function:
+    *   This function will be called if logout button is clicked.
+    *   It will remove the session of the user.
+    */
+  onLogout = () => {
+   
+    localStorage.removeItem('user-info');
+    localStorage.removeItem('token');
+    this.setState({
+      user: null
+      // isLogout : true
+    })
+    this.props.history.push('/login')
+  }
+
+
+  render() {
+    console.log(this.state.user)
+    return &lt;nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      &lt;div className="container-fluid">
+        &lt;NavLink className="navbar-brand" to='/home'>&lt;span style={{ color: "blue" }} className="bg-transparent">F&lt;/span>&lt;span style={{ color: "green" }} className="bg-transparent">i&lt;/span>
+          &lt;span style={{ color: "purple" }} className="bg-transparent">n&lt;/span>&lt;span style={{ color: "red" }} className="bg-transparent">d&lt;/span>
+          &lt;span style={{ color: "maroon" }} className="bg-transparent">T&lt;/span>&lt;span style={{ color: "teal" }} className="bg-transparent">h&lt;/span>
+          &lt;span style={{ color: "orange" }} className="bg-transparent">i&lt;/span>&lt;span style={{ color: "turquoise" }} className="bg-transparent">n&lt;/span>
+          &lt;span style={{ color: "pink" }} className="bg-transparent">g&lt;/span>&lt;span style={{ color: "blue" }} className="bg-transparent">s&lt;/span>&lt;/NavLink>
+        &lt;div className="collapse navbar-collapse" id="navbarSupportedContent">
+          &lt;ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            {/* Customised home button for seller, user and visitor */}
+
+            {
+              !this.state.user ? &lt;li className="nav-item">
+                &lt;NavLink className="nav-link active" aria-current="page" to="/home">Home&lt;/NavLink>
+              &lt;/li> : this.state.user.role == "USER" ?
+                &lt;li className="nav-item">
+                  &lt;NavLink className="nav-link active" aria-current="page" to="/buyer">Home&lt;/NavLink>
+                &lt;/li>
+                : this.state.user.role == "SELLER" ?
+                  &lt;li className="nav-item">
+                    &lt;NavLink className="nav-link active" aria-current="page" to="/seller">Home&lt;/NavLink>
+                  &lt;/li>
+                  : &lt;li className="nav-item">
+                    &lt;NavLink className="nav-link active" aria-current="page" to="/home">Home&lt;/NavLink>
+                  &lt;/li>
+            }
+            &lt;li className="nav-item">
+              &lt;NavLink className="nav-link" to="/about">About&lt;/NavLink>
+            &lt;/li>
+            &lt;li className="nav-item">
+              &lt;NavLink className="nav-link" to="/orders">Orders&lt;/NavLink>
+            &lt;/li>
+            &lt;li className="nav-item">
+              &lt;NavLink className="nav-link" to="/feedback">Feedback&lt;/NavLink>
+            &lt;/li>
+            &lt;li className="nav-item">
+              &lt;NavLink className="nav-link" to="/profile">Profile&lt;/NavLink>
+            &lt;/li>
+          &lt;/ul>
+          &lt;div style={{ align: "left", padding: "0 40px" }}>
+            &lt;ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              {
+                this.state.user &amp;&amp; this.state.user.role === "SELLER" ?
+                  &lt;li className="nav-item">
+                    &lt;a className="nav-link notif" href="/sellers/orders">{this.state.orderCount > 0 ? &lt;span className="num">{this.state.orderCount}&lt;/span> : ""}&lt;/a>
+                  &lt;/li>
+                  : ""
+              }
+              {
+                this.state.user ? &lt;Button className="btn" variant="outline-danger" onClick={this.onLogout} >Logout&lt;/Button> : &lt;Button href="/login" variant="outline-success" style={{ marginLeft: "0" }}>Login&lt;/Button>
+              }
+            &lt;/ul>
+          &lt;/div>
+        &lt;/div>
+        &lt;div className="h-10 w-14 bg-transparent border-2 border-white rounded-lg items-center justify-center grid cursor-pointer self-center mr-4 lg:hidden" onClick={this.navItemsHandler}>
+          &lt;div className="w-10 h-1 bg-white border rounded-lg">&lt;/div>
+          &lt;div className="w-10 h-1 bg-white border rounded-lg">&lt;/div>
+          &lt;div className="w-10 h-1 bg-white border rounded-lg">&lt;/div>
+        &lt;/div>
+      &lt;/div>
+      {this.state.navItemState &amp;&amp; &lt;div className="flex px-2 py-0 flex-wrap w-11/12 lg:hidden xl:hodden">
+        &lt;ul className="grid grid-rows-5 w-full">
+
+          {
+            !this.state.user ? &lt;li className="nav-item border-b-2">
+             &lt;NavLink className="nav-link active text-white" aria-current="page" to="/home">Home&lt;/NavLink>
+            &lt;/li> : this.state.user.role == "USER" ?
+              &lt;li className="nav-item border-b-2">
+                &lt;NavLink className="nav-link active text-white" aria-current="page" to="/buyer">Home&lt;/NavLink>
+              &lt;/li>
+              : this.state.user.role == "SELLER" ?
+                &lt;li className="nav-item border-b-2">
+                  &lt;NavLink className="nav-link active text-white" aria-current="page" to="/seller">Home&lt;/NavLink>
+                &lt;/li>
+                : &lt;li className="nav-item border-b-2">
+                  &lt;NavLink className="nav-link active text-white" aria-current="page" to="/home">Home&lt;/NavLink>
+                &lt;/li>
+          }
+          &lt;li className="nav-item border-b-2">
+            &lt;NavLink className="nav-link text-white" to="/about">About&lt;/NavLink>
+          &lt;/li>
+          &lt;li className="nav-item border-b-2">
+            &lt;NavLink className="nav-link text-white" to="/orders">Orders&lt;/NavLink>
+          &lt;/li>
+          &lt;li className="nav-item border-b-2">
+            &lt;NavLink className="nav-link text-white" to="/feedback">Feedback&lt;/NavLink>
+          &lt;/li>
+          &lt;li className="nav-item">
+            &lt;NavLink className="nav-link text-white" to="/profile">Profile&lt;/NavLink>
+          &lt;/li>
+          {
+            this.state.user &amp;&amp; this.state.user.role === "SELLER" ?
+              &lt;li className="nav-item">
+                &lt;a className="nav-link notif" href="/sellers/orders">{this.state.orderCount > 0 ? &lt;span className="num">{this.state.orderCount}&lt;/span> : ""}&lt;/a>
+              &lt;/li>
+              : ""
+          }
+
+          &lt;li className="nav-item">
+            {
+              this.state.user ? &lt;Button className="btn mx-3 my-2" variant="outline-danger" onClick={this.onLogout} >Logout&lt;/Button> : &lt;Button href="/login" className="mx-3 my-2" variant="outline-success" style={{ marginLeft: "0" }}>Login&lt;/Button>
+            }
+          &lt;/li>
+        &lt;/ul>
+      &lt;/div>}
+    &lt;/nav>
+
+  }
+}
+
+
+export default withRouter(Header);</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="About.html">About</a></li><li><a href="Buyer.html">Buyer</a></li><li><a href="Card.html">Card</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Header.html">Header</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="Seller.html">Seller</a></li><li><a href="SellerOrder.html">SellerOrder</a></li><li><a href="ShowFeedbacks.html">ShowFeedbacks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#ProductUpdate">ProductUpdate</a></li><li><a href="global.html#removeUserSession">removeUserSession</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setUserSession">setUserSession</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 29 2021 20:56:25 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

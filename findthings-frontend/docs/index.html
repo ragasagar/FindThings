@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>FINDTHINGS</h1>
+<h2>PROBLEM STATEMENT</h2>
+<p>Develop a web application that will keep track of all the items in the sta-tionery, their prices, distance from the student’s current location. We planto develop a system that does the same and much more like, students canreview the stationery, They will be able to compare the prices of the selecteditem between different stationeries, buyer can choose their stationery alongwith the price of the item and time of buyer’s arrival, once they confirm, anotification will be sent to the chosen stationery owner, notification will con-tain the information about the buyer, item required and total price, and oncethe seller confirms the order, the buyer can come at the time they specifiedand get their items.</p>
+<blockquote>
+<p>Find everything at one place!</p>
+<blockquote>
+<p>Compare prices of items between different stationeries and buy everything at a reasonable price and pick them up at your own chosen time.</p>
+</blockquote>
+</blockquote>
+<h2>FEATURES</h2>
+<ol>
+<li>Login/ Signup for both Buyer and seller.</li>
+<li>View Feedback option for both buyer and seller.</li>
+<li>Order products, Give Feedback, View history, Options for the buyer.</li>
+<li>Add Products, Update stocks, Accepting/Rejecting orders, Options for the Seller.</li>
+<li>Notification System.</li>
+</ol>
+<h3>TECHNOLOGY USED</h3>
+<ol>
+<li>
+<h4>HTML</h4>
+<p>HTML is the standard markup language for creating Web pages. It standsfor Hyper Text Markup Language. It describes the structure of a Web page using elements. elements tell the browser how to display the content.We used Html to structure our pages.</p>
+</li>
+<li>
+<h4>CSS and Bootstrap</h4>
+<p>we use CSS to style a Web page. It stands for Cascadingstyle sheet. It describes how HTML elements are to be displayed on screen. It can be used to control the layout of multiple pages if needed. Bootstrap is the most popular CSS Framework for developing responsive andmobile-first websites.CSS and Bootstrap is used to style the pages.</p>
+</li>
+<li>
+<h4>React JS</h4>
+<p>React is a free and open-source front-end JavaScript library for building userinterfaces or UI components.React is used to make interactive UI design.</p>
+</li>
+<li>
+<h4>Rest API</h4>
+<p>REST API(also known as RESTful API) is an application programminginterface (API or web API) that conforms to the constraints of REST archi-tectural style and allows for interaction with RESTful web services. RESTstands for representational state transfer.</p>
+</li>
+<li>
+<h4>Java Spring</h4>
+<p>The Spring Frameworkis an application framework and inversion of con-trol container for the Java  platform. The framework’s core features can beused by any Java application.Java Spring is used for backend.</p>
+</li>
+<li>
+<h4>Sqlite3</h4>
+<p>SQLiteis a relational database management system contained in a C library. In contrast to many other database management systems, SQLite is not aclient–server database engine. Rather, it is embedded into the end program.SQLite is used to create database.</p>
+</li>
+<li>
+<h4>JavaScript</h4>
+<p>It is used for Dynamic content on a website.</p>
+</li>
+</ol>
+<h2>DELIVERABLES</h2>
+<ul>
+<li>[x] Notification System</li>
+<li>[x] Review System</li>
+<li>[x] Google Map</li>
+</ul>
+<h2>SOFTWARE REQUIREMENTS</h2>
+<ol>
+<li>Any code editor</li>
+<li>Spring boot</li>
+<li>Mysql</li>
+<li>React setup</li>
+</ol>
+<h2>HOW TO OPERATE</h2>
+<h3>BACKEND SETUP</h3>
+<p>After cloning the backend code (named as findthings-backend in git repository), Open terminal and open the folder in which you cloned the project.</p>
+<p>Run command:
+<code>./gradlew bootRun</code></p>
+<p><em>This will Launch the backend successfully if no error is encountered.</em></p>
+<h3>FRONTEND SETUP</h3>
+<p>After cloning frontend code (named as findthings-frontend in git repository), Open terminal and open the folder in which you cloned the project.</p>
+<h3>Run commands in sequence</h3>
+<pre class="prettyprint source"><code>npm install
+
+npm start
+</code></pre>
+<p><em>This will launch the Frontend successfully if no error is encountered.</em></p>
+<h3>TO SETUP THE DATABASE</h3>
+<p><strong>Open Terminal.</strong></p>
+<p>Run commands in sequence:</p>
+<pre class="prettyprint source lang-mysql"><code>Sudo Mysql
+
+Enter Your Password for Mysql
+
+CREATE USER 'test'@'localhost' IDENTIFIED BY 'newpassword';
+
+GRANT ALL PRIVILEGES ON findthings.* To 'test'@'localhost' 
+
+IDENTIFIED BY 'newpassword';
+
+USE findthings;
+</code></pre>
+<p><em>Now, you can use the database successfully.</em></p>
+<h2>PRIMARY STAKEHOLDERS OF THE PRODUCT/SERVICE BUILT</h2>
+<ol>
+<li>Students of IIT Bombay</li>
+<li>Stationary shop owners around IIT Bombay</li>
+</ol>
+<h2>TEAM DETAILS AND CONTRIBUTION</h2>
+<ol>
+<li>Sagar Poudel (213051001) -&gt; Handled backend and also helped in frontend</li>
+<li>Aditya Barua (213050006) -&gt; Handled Database and Styling</li>
+<li>Pooja Rawat Meena (213050085) -&gt; Handled Frontend and Documentation</li>
+</ol>
+<h2>PATH TO CODE DOCUMENTATION</h2>
+<h3>For Backend Documentation</h3>
+<p><strong>Follow this path</strong>
+sap_club/findthing_backend/javadoc/index.html</p>
+<h3>For Frontend Documentation</h3>
+<p><strong>Follow this path</strong>
+sap_club/findthings_frontend/docs/index.html</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="About.html">About</a></li><li><a href="Buyer.html">Buyer</a></li><li><a href="Card.html">Card</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Header.html">Header</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="Seller.html">Seller</a></li><li><a href="SellerOrder.html">SellerOrder</a></li><li><a href="ShowFeedbacks.html">ShowFeedbacks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#ProductUpdate">ProductUpdate</a></li><li><a href="global.html#removeUserSession">removeUserSession</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setUserSession">setUserSession</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 29 2021 20:56:25 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

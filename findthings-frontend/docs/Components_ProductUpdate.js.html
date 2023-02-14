@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Components/ProductUpdate.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Components/ProductUpdate.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useState} from 'react'
+import { useHistory } from 'react-router-dom';
+import { Button } from "react-bootstrap";
+import { post } from '../Services/Apicall';
+
+require("es6-promise").polyfill();
+require("isomorphic-fetch");
+
+ /**     
+  *      @componet ProductUpdate:
+     *   This component will update the products of the seller.
+     *   @param - name of the product, stocks available, price of the product
+     *   @return Will save all these details in the dataabse findthings
+     */
+function ProductUpdate() {
+   
+    const [name, setName] = useState("");//To set product name value
+    const [stocks, setStocks] = useState("");//To set stocks
+    const [price, setPrice] = useState("");//To set price
+    let history = useHistory();
+    let user = JSON.parse(localStorage.getItem('user-info'))//Getting user-info
+
+    if(!user)
+    {
+        history.push('/login')
+    }
+
+
+    /**  submit function:
+     *   When login form is submited this fucntion will be invoked.
+     *   And will post the data given by the suer into the database
+     */
+    function submit(e) {
+    
+        e.preventDefault();
+        if (!name || !price || !stocks) {
+            alert("fields cannot be blank");
+        }
+        else {
+            let result;
+            let details = { shopId: user.shop.shopId, name, price, stocks }
+            post("http://localhost:8090/items", details)
+                .then(response => response.json())
+                .then(response => {
+                    result = response;
+                    alert("Product added successfully");
+                    setName(''); setStocks(''); setPrice('');
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            //Sending logger to their respective dashboard with repect to the user values
+
+        }
+    }
+
+    return (
+        &lt;center>
+        &lt;div className="container col-sm-4 w-full rounded-xl z-10 md:w-4/5 shadow-lg mt-28" style={{ backgroundColor: "#F5F5F5" }}>
+            &lt;h3 className="text-lg my-3 font-semibold text-green-600">Product details&lt;/h3>
+            &lt;form>{/*Login form */}
+                &lt;div className="mb-3">
+                    &lt;label htmlFor="name" className="form-label">Product name&lt;/label>
+                    &lt;input type="text" value={name} onChange={(e) => setName(e.target.value)} className="form-control focus:bg-blue-50" id="name" aria-describedby="emailHelp" />
+
+                &lt;/div>
+                &lt;div className="mb-3">
+                    &lt;label htmlFor="stocks" className="form-label">Stocks&lt;/label>
+                    &lt;input type="text" value={stocks} onChange={(e) => setStocks(e.target.value)} className="form-control focus:bg-blue-50" id="stocks" />
+                &lt;/div>
+                &lt;div className="mb-3">
+                    &lt;label htmlFor="price" className="form-label">Price&lt;/label>
+                    &lt;input type="text" value={price} onChange={(e) => setPrice(e.target.value)} className="form-control focus:bg-blue-50" id="price" />
+                &lt;/div>
+                &lt;br />
+                &lt;Button variant="success" onClick={submit}>Add Product&lt;/Button>
+            &lt;/form>
+            &lt;br />&lt;br />
+        &lt;/div>
+    &lt;/center>
+
+    )
+}
+export default ProductUpdate</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="About.html">About</a></li><li><a href="Buyer.html">Buyer</a></li><li><a href="Card.html">Card</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Header.html">Header</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="Seller.html">Seller</a></li><li><a href="SellerOrder.html">SellerOrder</a></li><li><a href="ShowFeedbacks.html">ShowFeedbacks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#ProductUpdate">ProductUpdate</a></li><li><a href="global.html#removeUserSession">removeUserSession</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setUserSession">setUserSession</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 29 2021 20:56:25 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

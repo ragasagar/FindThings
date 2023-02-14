@@ -1,0 +1,40 @@
+.search{
+    border:  1px solid;
+    -webkit-appearance: none;
+    outline: none;
+    
+    padding: 10px;
+    width: 180px;
+    line-height: 30px;
+    margin-bottom: 30px;
+}
+
+.search-input{
+    border:  1px solid;
+    -webkit-appearance: none;
+    outline: none;
+    
+    padding: 10px;
+    width: 150px;
+    line-height: 20px;
+    margin-bottom: 30px;
+}
+.search-bar{
+    border:  1px solid;
+    -webkit-appearance: none;
+    outline: none;
+    
+    padding: 10px;
+    width: 70px;
+    line-height: 20px;
+    margin-bottom: 30px;
+}
+
+
+.react-datetime-picker__clear-button {
+    display: none;
+}
+
+.react-datetime-picker__calendar-button{
+    display: none;
+}

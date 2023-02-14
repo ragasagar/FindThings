@@ -1,0 +1,118 @@
+.heading{
+    text-align: center;
+    padding-block: 20px;
+    border-bottom: 2px solid rgb(33, 63, 109);
+    margin-inline: 10px;
+    color: rgb(24, 47, 82);
+}
+
+.section1{
+    padding-block: 10px;
+    margin-inline: 10px;
+    color: rgb(24, 47, 82);
+}
+
+.section1 h2{
+    padding-block: 5px;
+}
+
+
+
+.card{
+    display: flex;
+    padding: 5px;
+    border: 2px solid rgb(33, 63, 109);
+    border-radius: 20px;
+    align-items: center;
+    padding-block-start: 20px;
+    margin-block-start: 20px;
+    justify-content: space-evenly;
+    
+}
+
+.card>div {
+    display: grid;
+    align-items: center;
+    
+    
+}
+
+.card div h5{
+    text-align: center;
+}
+
+
+.card div img{
+    border: 1px solid rgb(33, 63, 109);;
+    border-radius: 50%;
+    width: 100px;
+    margin-right: 5px;
+}
+
+.icons{
+    display:flex;
+    margin-top: 20px;
+    padding: 10px;
+    justify-content: center;
+}
+
+.icon{
+    font-size: xx-large;
+    margin-inline:10px;
+    color:rgb(33, 63, 109) ;
+}
+
+.section1>div>ul>li{
+    background-color: rgb(5, 78, 146);
+    margin-block: 10px;
+    border-radius: 5px;
+    padding: 4px;
+    color: honeydew;
+    width: 80%;
+}
+
+@media screen and (max-width:450px) { 
+    
+    .heading{
+        font-size: medium;
+    }
+
+    .card>div {
+        display:grid;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .card div h5{
+        padding-left: 10px;
+        font-size: small;
+        justify-self: center;
+        padding: 0;
+    }
+    
+    
+    .card div img{
+        border: 1px solid rgb(33, 63, 109);;
+        border-radius: 50%;
+        width: 70px;
+       
+    }
+
+    .section1>div>ul>li{
+
+        width: 100%;
+        font-size: small;
+    }
+
+    .section1>div>ul{
+        padding: 5px;
+    }
+
+    p{
+        font-size: small;
+    }
+
+
+
+    
+}

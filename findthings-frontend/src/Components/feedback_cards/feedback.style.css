@@ -1,0 +1,32 @@
+.feedback-container {
+    margin-top: 10px;
+    background-color: #F5F2F1;
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 25px;
+    cursor: pointer;
+  }
+  
+
+  .button{
+      margin: 10px;
+  }
+  
+  #secondfeedbackdiv.HideDetails{
+    max-height: 5em;
+    overflow:initial;
+    transition: max-height 0.5s, overflow 0.5s 0.5s;
+   }
+   
+   #secondfeedbackdiv {
+    max-height: 0;
+  /*and eventually delay an overflow:auto; */
+    overflow:auto;
+    transition: max-height 0.5s, overflow 0s;
+  }
+
+   .App{
+     text-align: left;
+     margin-left: 80px;
+
+   }

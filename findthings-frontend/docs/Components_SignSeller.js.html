@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Components/SignSeller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Components/SignSeller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { postUser } from '../Services/Apicall';
+
+/**      
+ *       @component SignSeller 
+     *   Shows the layout of the signup page for the seller.
+     *   Main Function:
+     *   @param -Shop name, username, address, Password
+     *   @return Saves all the inputs given by the user in the database called findthings.
+     */
+export default function SignSeller() {
+    
+    const [shop, setShop] = useState("");//To set the shop name
+    const [pass, setPass] = useState("");//To set the password
+    const [cpass, setCpass] = useState("");//To confirm password
+    const [user, setUser] = useState("");//To set the username
+    const [address, setAddress] = useState("");//To set the address
+
+    let history = useHistory();
+
+    /**
+     *   submit function:
+     *   This function will be invoked when signup button is clicked by the seller
+     *   @param -shop name, username, address, Password
+     *   @returns Will save the user details in the database.
+     */
+    async function submit(e) {
+    
+        e.preventDefault();
+        let shopDetail = {
+            "name":shop,
+            "address":address
+        }
+        let details = {userName:user,password:pass,shop:shopDetail, role: "SELLER", enabled:true, }
+        if (!shop || !pass || !cpass || !user || !address) {//Checking if fields are not empty
+            alert("Fields cannot be blank");
+        }
+        else 
+        {
+            if(pass !== cpass)
+                alert("Passwords don't match");
+            else
+            {  //push the data into database
+                let result;
+                postUser("http://localhost:8090/users", details)
+                    .then(response =>response.json())
+                    .then(response=> {
+                        result = response;
+                        alert("Sign Up successfully");
+                        history.push('/login');
+                    })
+                    .catch(err => {
+                        console.log(err.json())
+                    })
+            
+            }
+        }
+    }
+    return (
+        &lt;center>
+        &lt;div className="container rounded-xl z-10 md:w-4/5 shadow-lg mt-16 lg:w-9/12" style={{backgroundColor:"#F5F5F5"}}>
+            &lt;h3 className="text-green-600 font-semibold text-xl my-2">SignUp Page for Seller&lt;/h3>&lt;br/>
+            &lt;form>{/*Sign up form */}
+                &lt;div className="mb-4">
+                    &lt;label htmlFor="user" className="form-label">Username&lt;/label>
+                    &lt;input type="text" value={user} onChange={(e) => setUser(e.target.value)} className="form-control focus:bg-blue-50" id="user" aria-describedby="emailHelp" />
+                &lt;/div>
+                &lt;div className="mb-4">
+                    &lt;label htmlFor="email" className="form-label">Shop Name&lt;/label>
+                    &lt;input type="text" value={shop} onChange={(e) => setShop(e.target.value)} className="form-control focus:bg-blue-50" id="shop" aria-describedby="emailHelp" />
+                &lt;/div>
+                &lt;div className="mb-4">
+                    &lt;label htmlFor="address" className="form-label">Address&lt;/label>
+                    &lt;textarea value={address} onChange={(e) => setAddress(e.target.value)} className="form-control focus:bg-blue-50" id="address" aria-describedby="emailHelp">&lt;/textarea>
+                &lt;/div>
+                &lt;div className="mb-4">
+                    &lt;label htmlFor="pass" className="form-label">Password&lt;/label>
+                    &lt;input type="password" value={pass} onChange={(e) => setPass(e.target.value)} className="form-control focus:bg-blue-50" id="pass" />
+                &lt;/div>
+                &lt;div className="mb-4">
+                    &lt;label htmlFor="cpass" className="form-label">Confirm password&lt;/label>
+                    &lt;input type="password" value={cpass} onChange={(e) => setCpass(e.target.value)} className="form-control focus:bg-blue-50" id="cpass" />
+                &lt;/div>
+                
+                &lt;br/>
+                &lt;button type="submit" className="btn btn-sm btn-success text-lg hover:text-green-600 hover:bg-white" style={{height:"35px", width:"80px"}} onClick={submit}>SignUp&lt;/button>
+            &lt;/form>
+            &lt;br/>
+        &lt;/div>&lt;/center>
+    )
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="About.html">About</a></li><li><a href="Buyer.html">Buyer</a></li><li><a href="Card.html">Card</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Header.html">Header</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="Seller.html">Seller</a></li><li><a href="SellerOrder.html">SellerOrder</a></li><li><a href="ShowFeedbacks.html">ShowFeedbacks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#ProductUpdate">ProductUpdate</a></li><li><a href="global.html#removeUserSession">removeUserSession</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setUserSession">setUserSession</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 29 2021 20:56:25 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Components/profile.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Components/profile.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react'
+import "./profile.css"
+import img1 from "../Assets/image1.png";
+
+/**      
+ *       @component Profile
+     *   Profile Component used to show profiles of the user like their role, name, email.
+     *   We will also store user details and display it accordingly
+     */
+export default function Profile() {
+    
+    let user = JSON.parse(localStorage.getItem('user-info'))
+    console.log(user);
+
+    return (
+        &lt;div className="divBody">
+            &lt;div className="container  emp-profile" style={{width:"60%"}}>
+                &lt;form method="post">
+                    &lt;div className="row">
+                        &lt;div className="col-md-4">
+                            &lt;div className="profile-img">
+                                &lt;img src={img1} alt="" />
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;div className="col-md-6">
+                            &lt;div className="profile-head">
+                                &lt;h5>
+                                    {user.name}
+                                &lt;/h5>
+                                &lt;h6>
+                                    {user.role}
+                                &lt;/h6>
+                                &lt;ul className="nav nav-tabs" id="myTab" role="tablist">
+                                    &lt;li className="nav-item">
+                                        &lt;a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About&lt;/a>
+                                    &lt;/li>
+                                &lt;/ul>
+                            &lt;/div>
+                        &lt;/div>
+                    &lt;/div>
+                    &lt;div className="row">
+                        &lt;div className="col-md-4">
+                        &lt;/div>
+                        &lt;div className="col-md-8">
+                            &lt;div className="tab-content profile-tab" id="myTabContent">
+                                &lt;div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                    &lt;div className="row">
+                                        &lt;div className="col-md-6">
+                                            &lt;label>Id&lt;/label>
+                                        &lt;/div>
+                                        &lt;div className="col-md-6">
+                                            &lt;p>{user.id}&lt;/p>
+                                        &lt;/div>
+                                    &lt;/div>
+                                    &lt;div className="row">
+                                        &lt;div className="col-md-6">
+                                            &lt;label>UserName&lt;/label>
+                                        &lt;/div>
+                                        &lt;div className="col-md-6">
+                                            &lt;p>{user.userName}&lt;/p>
+                                        &lt;/div>
+                                    &lt;/div>
+                                    &lt;div className="row">
+                                        &lt;div className="col-md-6">
+                                            &lt;label>Name&lt;/label>
+                                        &lt;/div>
+                                        &lt;div className="col-md-6">
+                                            &lt;p>{user.name ? user.name : user.shop.name}&lt;/p>
+                                        &lt;/div>
+                                    &lt;/div>
+                                    &lt;div className="row">
+                                        &lt;div className="col-md-6">
+                                            &lt;label>Email&lt;/label>
+                                        &lt;/div>
+                                        &lt;div className="col-md-6">
+                                            &lt;p>{user.email}&lt;/p>
+                                        &lt;/div>
+                                    &lt;/div>
+                                    &lt;div className="row">
+                                        &lt;div className="col-md-6">
+                                            &lt;label>Role&lt;/label>
+                                        &lt;/div>
+                                        &lt;div className="col-md-6">
+                                            &lt;p>{user.role}&lt;/p>
+                                        &lt;/div>
+                                    &lt;/div>
+                                &lt;/div>
+                                {
+                                    user.shop ?
+                                        &lt;div>
+                                            &lt;div className="row">
+                                                &lt;div className="col-md-6">
+                                                    &lt;label>Shop&lt;/label>
+                                                &lt;/div>
+                                                &lt;div className="col-md-6">
+                                                &lt;/div>
+                                            &lt;/div>
+                                            &lt;div className="row">
+                                                &lt;div className="col-md-6">
+                                                    &lt;label>Name&lt;/label>
+                                                &lt;/div>
+                                                &lt;div className="col-md-6">
+                                                    &lt;p>{user.shop.name}&lt;/p>
+                                                &lt;/div>
+                                            &lt;/div>
+                                            &lt;div className="row">
+                                                &lt;div className="col-md-6">
+                                                    &lt;label>Address&lt;/label>
+                                                &lt;/div>
+                                                &lt;div className="col-md-6">
+                                                    &lt;p>{user.shop.address}&lt;/p>
+                                                &lt;/div>
+                                            &lt;/div>
+                                        &lt;/div>
+                                        : ""}
+                            &lt;/div>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/form>
+            &lt;/div>
+        &lt;/div>
+    )
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="About.html">About</a></li><li><a href="Buyer.html">Buyer</a></li><li><a href="Card.html">Card</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Header.html">Header</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li><li><a href="Seller.html">Seller</a></li><li><a href="SellerOrder.html">SellerOrder</a></li><li><a href="ShowFeedbacks.html">ShowFeedbacks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#ProductUpdate">ProductUpdate</a></li><li><a href="global.html#removeUserSession">removeUserSession</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#setUserSession">setUserSession</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 29 2021 20:56:25 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
